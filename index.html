@@ -148,14 +148,30 @@
     </div>
 
     <script>
-      const numeroDesiderato = "4570";
+      // Inserisci qui i 3 numeri desiderati (stringhe di 4 cifre)
+      const numeriDesiderati = ["4520", "4603", "4599"];
+      let lancioCorrente = 0;
+
       function getRandomDigit() {
         return Math.floor(Math.random() * 10);
       }
 
       function spin() {
+        const button = document.querySelector("button");
+        button.disabled = true;
+        lancioCorrente = 0;
+        lanciaSequenza();
+      }
+
+      function lanciaSequenza() {
+        if (lancioCorrente >= numeriDesiderati.length) {
+          document.querySelector("button").disabled = false;
+          return;
+        }
         const digits = document.querySelectorAll(".digit");
-        let steps = 20; // quante "rotazioni" fare
+        // Rimuovi eventuale evidenziazione precedente
+        digits.forEach((d) => (d.style.background = "#a6b8dc"));
+        let steps = 20;
         let count = 0;
 
         const interval = setInterval(() => {
@@ -163,10 +179,10 @@
             digits[i].textContent = getRandomDigit();
           }
           count++;
-
           if (count >= steps) {
             clearInterval(interval);
             // Imposta il risultato finale:
+            let numeroDesiderato = numeriDesiderati[lancioCorrente];
             let finalNumber = numeroDesiderato.match(/^\d{4}$/)
               ? numeroDesiderato
               : "4" + getRandomDigit() + getRandomDigit() + getRandomDigit();
@@ -174,8 +190,12 @@
             digits[1].textContent = finalNumber[1];
             digits[2].textContent = finalNumber[2];
             digits[3].textContent = finalNumber[3];
+            // Evidenzia in rosso le 4 caselle estratte
+            digits.forEach((d) => (d.style.background = "#FF5E7A"));
+            lancioCorrente++;
+            setTimeout(lanciaSequenza, 3000); // Pausa tra un lancio e l'altro
           }
-        }, 80); // velocità rotazione
+        }, 80);
       }
     </script>
   </body>
